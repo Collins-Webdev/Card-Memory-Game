@@ -19,6 +19,8 @@ const cards = [
 
 const container = document.querySelector(".container");
 
+let selectedCard = null;
+
 // Function to shuffle the cards array
 function shuffleCards(cards) {
   for (let i = cards.length - 1; i > 0; i--) {
@@ -48,7 +50,21 @@ cardElements.forEach((element) => {
   const div = document.createElement("div");
   div.classList.add("card");
   div.addEventListener("click", (event) => {
-    event.target.classList.toggle("visible");
+    // Check if card is visible
+    const isVisible = event.target.classList.contains("visible");
+    if (!isVisible) {
+      event.target.classList.add("visible");
+      // Check if first card selected
+      if (selectedCard) {
+        setTimeout(() => {
+          event.target.classList.remove("visible");
+          selectedCard.classList.remove("visible");
+          selectedCard = null;
+        }, 800);
+      } else {
+        selectedCard = event.target;
+      }
+    }
   });
   div.innerHTML = element;
   container.appendChild(div);
