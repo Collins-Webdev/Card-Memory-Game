@@ -14,20 +14,47 @@ body {
 }
 
 .container {
-  width: 95%;
-  height: 95%;
+  width: 90%;
+  height: 90%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
 }
 
 .card {
+  perspective: 1000px;
+}
+
+.inner {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.card.visible .inner {
+  transform: rotateY(180deg);
+}
+
+.front,
+.back {
   background-color: #ddd;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.front {
+  transform: rotateY(180deg);
 }
 
 .material-symbols-outlined {
   transform: scale(3);
+  pointer-events: none;
 }

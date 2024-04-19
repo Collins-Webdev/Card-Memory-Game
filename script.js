@@ -33,7 +33,13 @@ shuffleCards(cards);
 // Creating the card elements with the shuffled cards
 const cardElements = cards.map(
   (card) => `
-    <span class="material-symbols-outlined"> ${card} </span>
+    <div class="inner">
+      <div class="front">
+        <div class="material-symbols-outlined"> ${card} </div>
+      </div>
+      <div class="back">
+      </div>
+    </div>
   `
 );
 
@@ -41,6 +47,9 @@ const cardElements = cards.map(
 cardElements.forEach((element) => {
   const div = document.createElement("div");
   div.classList.add("card");
+  div.addEventListener("click", (event) => {
+    event.target.classList.toggle("visible");
+  });
   div.innerHTML = element;
   container.appendChild(div);
 });
