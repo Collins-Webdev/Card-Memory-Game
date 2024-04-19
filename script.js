@@ -31,12 +31,20 @@ function shuffleCards(cards) {
   }
 }
 
-// Shuffling the cards array
-shuffleCards(cards);
+// Show end game dialog
+function showCongratulations() {
+  const dialog = document.getElementById("dialog");
+  dialog.style.display = "flex";
+}
 
-// Creating the card elements with the shuffled cards
-const cardElements = cards.map(
-  (card) => `
+// Start game
+const startGame = () => {
+  // Shuffling the cards array
+  shuffleCards(cards);
+
+  // Creating the card elements with the shuffled cards
+  const cardElements = cards.map(
+    (card) => `
     <div class="inner">
       <div class="front">
         <div class="material-symbols-outlined"> ${card} </div>
@@ -45,41 +53,57 @@ const cardElements = cards.map(
       </div>
     </div>
   `
-);
+  );
 
-// Put the card on the page
-cardElements.forEach((element) => {
-  const div = document.createElement("div");
-  div.classList.add("card");
-  div.addEventListener("click", (event) => {
-    // Check if card is visible
-    const isVisible = event.target.classList.contains("visible");
-    if (!isVisible) {
-      event.target.classList.add("visible");
-      // Check if first card selected
-      if (selectedCard) {
-        const currentSymbol = event.target.querySelector(
-          ".material-symbols-outlined"
-        ).innerHTML;
-        const previousSymbol = selectedCard.querySelector(
-          ".material-symbols-outlined"
-        ).innerHTML;
-        if (currentSymbol === previousSymbol) {
-          matchedPairs++;
-          selectedCard = null;
-          return;
-        } else {
-          setTimeout(() => {
-            event.target.classList.remove("visible");
-            selectedCard.classList.remove("visible");
+  // Put the card on the page
+  cardElements.forEach((element) => {
+    const div = document.createElement("div");
+    div.classList.add("card");
+    div.addEventListener("click", (event) => {
+      // Check if card is visible
+      const isVisible = event.target.classList.contains("visible");
+      if (!isVisible) {
+        event.target.classList.add("visible");
+        // Check if first card selected
+        if (selectedCard) {
+          const currentSymbol = event.target.querySelector(
+            ".material-symbols-outlined"
+          ).innerHTML;
+          const previousSymbol = selectedCard.querySelector(
+            ".material-symbols-outlined"
+          ).innerHTML;
+          if (currentSymbol === previousSymbol) {
+            matchedPairs++;
             selectedCard = null;
-          }, 800);
+            if (matchedPairs == 8) {
+              showCongratulations();
+            }
+            return;
+          } else {
+            setTimeout(() => {
+              event.target.classList.remove("visible");
+              selectedCard.classList.remove("visible");
+              selectedCard = null;
+            }, 800);
+          }
+        } else {
+          selectedCard = event.target;
         }
-      } else {
-        selectedCard = event.target;
       }
-    }
+    });
+    div.innerHTML = element;
+    container.appendChild(div);
   });
-  div.innerHTML = element;
-  container.appendChild(div);
-});
+};
+
+// Restart game
+const restartGame = () => {
+  const dialog = document.getElementById("dialog");
+  dialog.style.display = "none";
+  container.innerHTML = "";
+  selectedCard = null;
+  matchedPairs = 0;
+  startGame();
+};
+
+startGame();
