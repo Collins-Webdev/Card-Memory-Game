@@ -21,6 +21,8 @@ const container = document.querySelector(".container");
 
 let selectedCard = null;
 
+let matchedPairs = 0;
+
 // Function to shuffle the cards array
 function shuffleCards(cards) {
   for (let i = cards.length - 1; i > 0; i--) {
@@ -56,11 +58,23 @@ cardElements.forEach((element) => {
       event.target.classList.add("visible");
       // Check if first card selected
       if (selectedCard) {
-        setTimeout(() => {
-          event.target.classList.remove("visible");
-          selectedCard.classList.remove("visible");
+        const currentSymbol = event.target.querySelector(
+          ".material-symbols-outlined"
+        ).innerHTML;
+        const previousSymbol = selectedCard.querySelector(
+          ".material-symbols-outlined"
+        ).innerHTML;
+        if (currentSymbol === previousSymbol) {
+          matchedPairs++;
           selectedCard = null;
-        }, 800);
+          return;
+        } else {
+          setTimeout(() => {
+            event.target.classList.remove("visible");
+            selectedCard.classList.remove("visible");
+            selectedCard = null;
+          }, 800);
+        }
       } else {
         selectedCard = event.target;
       }
